@@ -66,8 +66,6 @@ Now, we will be deploying a sample service that outputs a simple Quote of the Mo
 
 In this tutorial, we will deploy a basic Auth service for user validation to Microservices.
 
-### Deploy auth-service
-
 1. Deploy the external `auth-service`. This is a simple auth service that listens on port 3000, uses only username: username, pw: password, and only implements auth on `/backend/get-quote/`.  See implementation at: https://github.com/datawire/ambassador-auth-service.
 
    ```bash
