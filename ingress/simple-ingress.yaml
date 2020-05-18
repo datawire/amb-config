@@ -1,0 +1,32 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: ambassador
+  name: quote-ingress-exact
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /backend/get-quote/
+        pathType: Exact
+        backend:
+          serviceName: quote
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: ambassador
+  name: quote-ingress-prefix
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /quote/
+        pathType: Prefix
+        backend:
+          serviceName: quote
+          servicePort: 80
