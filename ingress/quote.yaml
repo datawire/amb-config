@@ -4,11 +4,10 @@ kind: Service
 metadata:
   name: quote
 spec:
-  type: NodePort
   ports:
   - name: http
     port: 80
-    targetPort: 8000
+    targetPort: 8080
   selector:
     app: quote
 ---
@@ -29,21 +28,8 @@ spec:
         app: quote
     spec:
       containers:
-      - name: quote
-        imagePullPolicy: Always
-        image: nkrause/quote:sleep-1
+      - name: backend
+        image: quay.io/datawire/quote:0.2.7
         ports:
         - name: http
-          containerPort: 8000
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          periodSeconds: 1
-        resources:
-          limits:
-            cpu: "0.1"
-            memory: 100Mi
-        env: 
-        - name: PORT
-          value: "8000" 
+          containerPort: 8080
