@@ -11,27 +11,15 @@ To get started, clone the repository:
 git clone https://github.com/datawire/amb-config
 ```
 
-## Installing Ambassador
+## Installing Ambassador with Helm v3
 
-1. Apply Ambassador CRDs.
+1. Install Ambassador API Gateway
 
-   ```
-   kubectl apply -f install/ambassador-crds.yaml
-   ```
-
-2. Install Ambassador.
-
-   ```
-   kubectl apply -f install/ambassador-rbac.yaml
+   ```bash
+   helm install ambassador datawire/ambassador --set image.repository=datawire/ambassador --set enableAES=false --set namespace.name=default
    ```
 
-4. Install the Ambassador Service.  Looking at the manifest itself, you can see we are creating a LoadBalancer service that routes incoming traffic from port 80 to 8080, which Ambassador is listening on.
-
-   ```
-   kubectl apply -f install/ambassador-service.yaml
-   ```
-
-5. Test that Ambassador is working by navigating to the Diagnostics page.  Navigate to `http://{{AMBASSADOR_HOST}}/ambassador/v0/diag/` in your browser.  Note this endpoint can be disabled by setting `diagnostics.enabled: false` in an [Ambassador Module](https://www.getambassador.io/docs/latest/topics/running/ambassador/).
+2. Test that Ambassador is working by navigating to the Diagnostics page.  Navigate to `http://{{AMBASSADOR_HOST}}/ambassador/v0/diag/` in your browser.  Note this endpoint can be disabled by setting `diagnostics.enabled: false` in an [Ambassador Module](https://www.getambassador.io/docs/latest/topics/running/ambassador/).
 
 ## Getting started with Ingresses
 
