@@ -142,16 +142,6 @@ will be using `cert-manager` with an http-01 challenge.  If you can't easily reg
    ```
    You will notice that it redirects from HTTP to HTTPS automatically.  To configure more advanced routing behaviours, see [Host](https://www.getambassador.io/docs/latest/topics/running/host-crd/#secure-and-insecure-requests) documentation.
 
-## SPDY protocol support.
-
-Demonstrating SPDY support is as simple as using `kubectl exec` into an Ambassador pod.  `kubectl exec` uses SPDY 3.1 to connect to a pod.  An increased verbocity level will show a protocol upgrade to SPDY during the `exec` process.
-
-```bash
-kubectl exec -v=8 -it {{ambassador pod}} -- ls 2> >(grep SPDY) >> /dev/null
-```
-
-Examining the output shows a protocol upgrade to SPDY/3.1.
-
 ## Layer 4 TCP Routing
 
 Ambassador can route TCP traffic directly from specified ports to services in your cluster.  To demonstrate this, we will use a busybox deployment to `netcat` from our local machine to the cluster, creating a direct TCP route.
