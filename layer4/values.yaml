@@ -1,0 +1,14 @@
+enableAES: false
+image:
+  repository: datawire/ambassador
+service:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+  - name: https
+    port: 443
+    targetPort: 8443
+  - name: tcp
+    port: 30080
+    targetPort: 30080

@@ -1,0 +1,8 @@
+---
+apiVersion: getambassador.io/v2
+kind:  TCPMapping
+metadata:
+  name:  nc-mapping
+spec:
+  port: 30080
+  service: busybox-service:30080

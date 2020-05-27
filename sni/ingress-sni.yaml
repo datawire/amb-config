@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-sni
+  annotations:
+    kubernetes.io/ingress.class: ambassador
+spec:
+  rules:
+  - host: {{host1.example.com}}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: quote
+          servicePort: 80
+  - host: {{host2.example.com}}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: hello
+          servicePort: 80

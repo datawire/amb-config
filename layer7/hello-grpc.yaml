@@ -1,0 +1,47 @@
+---
+apiVersion: getambassador.io/v2
+kind: Mapping
+metadata:
+  name: grpc-py
+spec:
+  grpc: True
+  prefix: /helloworld.Greeter/
+  rewrite: /helloworld.Greeter/
+  service: grpc-example
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: grpc-example
+  name: grpc-example
+spec:
+  type: ClusterIP
+  ports:
+  - name: grpc-greet
+    port: 80
+    targetPort: grpc-api
+  selector:
+    service: grpc-example
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grpc-example
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: grpc-example
+  template:
+    metadata:
+      labels:
+        service: grpc-example
+    spec:
+      containers:
+      - name: grpc-example
+        image: nkrause/grpc:1.2.2-test
+        ports:
+        - name: grpc-api
+          containerPort: 50051
+      restartPolicy: Always

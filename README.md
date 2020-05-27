@@ -151,3 +151,103 @@ kubectl exec -v=8 -it {{ambassador pod}} -- ls 2> >(grep SPDY) >> /dev/null
 ```
 
 Examining the output shows a protocol upgrade to SPDY/3.1.
+
+## Layer 4 TCP Routing
+
+Ambassador can route TCP traffic directly from specified ports to services in your cluster.  To demonstrate this, we will use a busybox deployment to `netcat` from our local machine to the cluster, creating a direct TCP route.
+
+1. Deploy busybox.
+   
+   ```bash
+   kubectl apply -f layer4/busybox.yaml
+   ```
+
+2. Update the Ambassador deployment to open the new port, in this case 30080.
+   
+   ```bash
+   helm upgrade ambassador -f layer4/values.yaml datawire/ambassador
+   ```
+
+3. Apply TCPMapping.
+   
+   ```bash
+   kubectl apply -f layer4/tcp-mapping.yaml
+   ```
+
+4. Start netcat listener on the busybox pod in a separate terminal.
+
+   ```bash
+   kubectl exec -it {{busybox_pod}} -- nc -lvnp 30080
+   ```
+
+5. Start netcat client.
+
+   ```bash
+   nc -v {{ambassador IP}} 30080
+   ```
+
+6. Type away!  Any line typed into stdin can be seen in the other terminal that's listening.
+
+## Layer 7 gRPC Routing
+
+Ambassador natively supports gRPC routing.  In this example, we will deploy a simple gRPC hello service and connect to it.  The example client requires clear-text routing, so an additional Host is also needed.  This example also assumes you have the relevant Python [pip modules](https://grpc.io/docs/quickstart/python/) installed for gRPC.
+
+1. Deploy the gRPC server.
+   
+   ```bash
+   kubectl apply -f layer7/hello-grpc.yaml
+   ```
+
+2. Create a new host for cleartext.  I used a different hostname than previous examples (i.e. cleartext.ip.nip.io).
+
+   ```bash
+   kubectl apply -f layer7/host.yaml
+   ```
+
+3. Start client service, make sure to edit greeter_client.py with your hostname.
+
+   ```bash
+   python layer7/greeter_client.py
+   ```
+
+   A successful response will return 'Hello, you!'.
+
+## SNI Support
+
+SNI support is also natively supported by Ambassador.  In this example we will deploy a hello service alongside the existing quote service.  Two separate hostnames will be used to route traffic to the respective service using Ingresses.
+
+1. Deploy hello service.
+
+   ```bash
+   kubectl apply -f sni/hello.yaml
+   ```
+
+2. Create new certificates for your hosts.
+
+   ```bash
+   kubectl apply -f sni/certificate-sni.yaml
+   ```
+
+3. Once the certs are updated, create new hosts.
+
+   ```bash
+   kubectl apply -f sni/host-sni.yaml
+   ```
+
+4. Create Ingresses to map the services.
+
+   ```bash
+   kubectl apply -f sni/ingress-sni.yaml
+   ```
+
+5. Test each hostname to see them resolve to different services.
+
+   ```bash
+   curl -Lv https://host1.example.com/
+   ```
+
+   And
+
+   ```bash
+   curl -Lv https://host2.example.com/
+   ```

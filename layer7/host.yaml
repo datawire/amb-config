@@ -1,0 +1,13 @@
+---
+apiVersion: getambassador.io/v2
+kind: Host
+metadata:
+  name: my-host-cleartext
+spec:
+  hostname: {{clear_ambassador_host}}
+  acmeProvider:
+    authority: none
+  requestPolicy:
+    insecure:
+      action: Route
+      additionalPort: 8080
