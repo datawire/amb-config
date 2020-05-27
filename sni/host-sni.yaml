@@ -1,0 +1,22 @@
+apiVersion: getambassador.io/v2
+kind: Host
+metadata:
+  name: sni-host1
+spec:
+  hostname: {{host1.example.com}}
+  acmeProvider:
+    authority: none
+  tlsSecret:
+    name: ambassador-certs
+
+---
+apiVersion: getambassador.io/v2
+kind: Host
+metadata:
+  name: sni-host2
+spec:
+  hostname: {{host2.example.com}}
+  acmeProvider:
+    authority: none
+  tlsSecret:
+    name: ambassador-certs
